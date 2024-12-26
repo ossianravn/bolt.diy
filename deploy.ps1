@@ -6,21 +6,20 @@ Write-Host "Starting deployment process..." -ForegroundColor Green
 # Ensure we're in the right directory
 Set-Location $PSScriptRoot
 
-# Install all dependencies (including dev dependencies for build)
-Write-Host "Installing dependencies..." -ForegroundColor Yellow
+# Temporarily unset NODE_ENV to install all dependencies
+Remove-Item Env:\NODE_ENV -ErrorAction SilentlyContinue
+Write-Host "Installing all dependencies..." -ForegroundColor Yellow
 pnpm install
 
 # Build the application
 Write-Host "Building application..." -ForegroundColor Yellow
 $env:NODE_ENV = "development"
-pnpm run build
+pnpm exec remix vite:build
 
-# Clean dev dependencies and install only production dependencies
+# Install only production dependencies
 Write-Host "Installing production dependencies..." -ForegroundColor Yellow
-pnpm install --prod --prefer-offline
-
-# Set production environment
 $env:NODE_ENV = "production"
+pnpm install --prod --prefer-offline
 
 # Start the server
 Write-Host "Starting server..." -ForegroundColor Green
