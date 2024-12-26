@@ -1,20 +1,30 @@
-import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
-import { createRequestHandler } from "@remix-run/cloudflare-pages";
-import build from "./server-build.js";
+import express from 'express';
+import { createRequestHandler } from '@remix-run/express';
+import { installGlobals } from '@remix-run/node';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
 
-const handler = createRequestHandler(build, process.env.NODE_ENV);
+// ES modules fix for __dirname
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Install Remix globals
+installGlobals();
+
+const app = express();
+
+// Serve static files from the build/client directory
+app.use(express.static(path.join(__dirname, 'build', 'client')));
+
+// All other routes will be handled by Remix
+app.all(
+  '*',
+  createRequestHandler({
+    build: await import('./build/server/index.js'),
+    mode: process.env.NODE_ENV || 'production',
+  })
+);
 
 const port = process.env.PORT || 3000;
-createServer(async (req, res) => {
-  if (req.url.startsWith("/build/")) {
-    // Serve static files from build directory
-    const filePath = new URL("." + req.url, import.meta.url);
-    const content = await readFile(filePath);
-    return res.writeHead(200).end(content);
-  }
-  
-  return handler(req, res);
-}).listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 }); 
