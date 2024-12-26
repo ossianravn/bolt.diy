@@ -21,8 +21,8 @@ const requiredEnvVars = {
 // Set any missing environment variables
 Object.entries(requiredEnvVars).forEach(([key, defaultValue]) => {
   if (!process.env[key]) {
-    process.env[key] = defaultValue;
     console.log(`Setting default value for ${key}`);
+    process.env[key] = defaultValue;
   }
 });
 
