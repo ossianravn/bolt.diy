@@ -1,26 +1,18 @@
 # Stop on first error
 $ErrorActionPreference = "Stop"
 
-Write-Host "Starting deployment process..." -ForegroundColor Green
+Write-Host "Starting deployment process..."
 
-# Ensure we're in the right directory
-Set-Location $PSScriptRoot
-
-# Temporarily unset NODE_ENV to install all dependencies
-Remove-Item Env:\NODE_ENV -ErrorAction SilentlyContinue
-Write-Host "Installing all dependencies..." -ForegroundColor Yellow
+Write-Host "Installing all dependencies (including dev dependencies)..."
+[Environment]::SetEnvironmentVariable("NODE_ENV", "development", [System.EnvironmentVariableTarget]::Process)
 pnpm install
 
-# Build the application
-Write-Host "Building application..." -ForegroundColor Yellow
-$env:NODE_ENV = "development"
+Write-Host "Building application..."
 pnpm exec remix vite:build
 
-# Install only production dependencies
-Write-Host "Installing production dependencies..." -ForegroundColor Yellow
-$env:NODE_ENV = "production"
+Write-Host "Installing production dependencies..."
+[Environment]::SetEnvironmentVariable("NODE_ENV", "production", [System.EnvironmentVariableTarget]::Process)
 pnpm install --prod --prefer-offline
 
-# Start the server
-Write-Host "Starting server..." -ForegroundColor Green
+Write-Host "Starting server..."
 node server.js 
