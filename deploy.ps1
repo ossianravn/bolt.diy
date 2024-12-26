@@ -6,13 +6,18 @@ Write-Host "Starting deployment process..." -ForegroundColor Green
 # Ensure we're in the right directory
 Set-Location $PSScriptRoot
 
-# Install dependencies
+# Install all dependencies (including dev dependencies for build)
 Write-Host "Installing dependencies..." -ForegroundColor Yellow
-pnpm install --prod
+pnpm install
 
 # Build the application
 Write-Host "Building application..." -ForegroundColor Yellow
+$env:NODE_ENV = "development"
 pnpm run build
+
+# Clean dev dependencies and install only production dependencies
+Write-Host "Installing production dependencies..." -ForegroundColor Yellow
+pnpm install --prod --prefer-offline
 
 # Set production environment
 $env:NODE_ENV = "production"
