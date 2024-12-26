@@ -324,3 +324,23 @@ Explore upcoming features and priorities on our [Roadmap](https://roadmap.sh/r/o
 ## FAQ
 
 For answers to common questions, issues, and to see a list of recommended models, visit our [FAQ Page](FAQ.md).
+
+## Authentication Setup
+
+To enable user authentication:
+
+1. Set the required environment variables in your `.env` file:
+```bash
+SESSION_SECRET=your-secure-session-secret
+ADMIN_USERNAME=your-admin-username  # Optional, defaults to 'admin'
+ADMIN_PASSWORD=your-secure-password
+```
+
+2. Create the first admin user:
+```bash
+pnpm run create-user
+```
+
+3. Start the application and navigate to `/login`
+
+Note: Make sure to choose a strong password for the admin user. This user will have full access to the application.

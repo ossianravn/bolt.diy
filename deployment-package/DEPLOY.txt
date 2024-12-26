@@ -1,0 +1,9 @@
+Deployment Instructions:
+1. In IIS Manager, stop the bolt.engineer website
+2. Install Node.js on the server if not already installed
+3. Install pnpm globally: npm install -g pnpm
+4. Copy these files to C:\Websites\bolt.engineer
+5. Run 'pnpm install --prod' in the deployment directory
+6. In IIS Manager:
+   - Ensure URL Rewrite module is installed
+   - Start the bolt.engineer website

@@ -3,6 +3,7 @@ import useViewport from '~/lib/hooks';
 import { chatStore } from '~/lib/stores/chat';
 import { workbenchStore } from '~/lib/stores/workbench';
 import { classNames } from '~/utils/classNames';
+import { Form } from '@remix-run/react';
 
 interface HeaderActionButtonsProps {}
 
@@ -15,7 +16,7 @@ export function HeaderActionButtons({}: HeaderActionButtonsProps) {
   const canHideChat = showWorkbench || !showChat;
 
   return (
-    <div className="flex">
+    <div className="flex gap-2">
       <div className="flex border border-bolt-elements-borderColor rounded-md overflow-hidden">
         <Button
           active={showChat}
@@ -42,6 +43,11 @@ export function HeaderActionButtons({}: HeaderActionButtonsProps) {
           <div className="i-ph:code-bold" />
         </Button>
       </div>
+      <Form action="/logout" method="post">
+        <Button type="submit">
+          <div className="i-ph:sign-out text-lg" />
+        </Button>
+      </Form>
     </div>
   );
 }
@@ -51,11 +57,13 @@ interface ButtonProps {
   disabled?: boolean;
   children?: any;
   onClick?: VoidFunction;
+  type?: 'button' | 'submit';
 }
 
-function Button({ active = false, disabled = false, children, onClick }: ButtonProps) {
+function Button({ active = false, disabled = false, children, onClick, type = 'button' }: ButtonProps) {
   return (
     <button
+      type={type}
       className={classNames('flex items-center p-1.5', {
         'bg-bolt-elements-item-backgroundDefault hover:bg-bolt-elements-item-backgroundActive text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary':
           !active,
