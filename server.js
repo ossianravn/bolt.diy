@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
-import { createRequestHandler } from "@remix-run/node";
+import { createRequestHandler } from "@remix-run/cloudflare-pages";
 import * as build from "./build/server/index.js";
 
 const handler = createRequestHandler(build, process.env.NODE_ENV);
